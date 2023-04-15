@@ -20,10 +20,10 @@ class GameViewModel: ViewModel() {
     private fun shuffleCurretnWord(word: String): String {
         val tempWord = word.toCharArray()
 
-        while (tempWord.toString() == word) {
+        while (String(tempWord) == word) {
             tempWord.shuffle()
         }
-        return tempWord.toString()
+        return String(tempWord)
     }
 
     private fun pickRandomWordAndShuffle(): String {
@@ -36,7 +36,7 @@ class GameViewModel: ViewModel() {
         }
     }
 
-    fun resetGame() {
+    private fun resetGame() {
         usedWords.clear()
         _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
     }
