@@ -80,7 +80,7 @@ fun GameScreen(
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             OutlinedButton(
-                onClick = { },
+                onClick = { gameViewModel.skipWord() },
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp)
