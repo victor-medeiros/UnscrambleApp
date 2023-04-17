@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 const val SCORE_INCREASE = 20
+const val MAX_NO_OF_WORDS = 10
+
 class GameViewModel: ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
@@ -27,7 +29,7 @@ class GameViewModel: ViewModel() {
         resetGame()
     }
 
-    private fun shuffleCurretnWord(word: String): String {
+    private fun shuffleCurrentWord(word: String): String {
         val tempWord = word.toCharArray()
 
         while (String(tempWord) == word) {
@@ -42,11 +44,11 @@ class GameViewModel: ViewModel() {
             pickRandomWordAndShuffle()
         } else {
             usedWords.add(currentWord)
-            shuffleCurretnWord(currentWord)
+            shuffleCurrentWord(currentWord)
         }
     }
 
-    private fun resetGame() {
+    fun resetGame() {
         usedWords.clear()
         _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
     }
@@ -68,12 +70,21 @@ class GameViewModel: ViewModel() {
     }
 
     private fun updateGameState() {
-        _uiState.update {currentState ->
-            currentState.copy(
-                currentScrambledWord = pickRandomWordAndShuffle(),
-                isGuessedWordWrong = false,
-                currentWordCount = currentState.currentWordCount.inc()
-            )
+        if (usedWords.size == MAX_NO_OF_WORDS) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    isGuessedWordWrong = false,
+                    isGameOver = true
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    currentScrambledWord = pickRandomWordAndShuffle(),
+                    isGuessedWordWrong = false,
+                    currentWordCount = currentState.currentWordCount.inc()
+                )
+            }
         }
     }
 
